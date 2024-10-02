@@ -70,7 +70,7 @@ export function inlineArrayElements(
     const property = memberPath.node.property as t.NumericLiteral;
     const index = property.value;
     const replacement = array.elements[index]!;
-    memberPath.replaceWith(replacement);
+    memberPath.replaceWith(t.cloneNode(replacement));
   }
 }
 
@@ -265,7 +265,7 @@ export function inlineVariableAliases(
           ref.parentPath.remove();
         } else {
           // Replace `(alias = decoder)(1);` with `decoder(1);`
-          ref.parentPath.replaceWith(ref.parentPath.node.right);
+          ref.parentPath.replaceWith(t.identifier(targetName));
         }
       } else if (ref.parentPath?.isVariableDeclarator()) {
         // Remove `alias = decoder;` of declarator
